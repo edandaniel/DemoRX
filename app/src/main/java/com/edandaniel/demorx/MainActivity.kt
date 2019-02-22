@@ -16,36 +16,27 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val clubesObservable = Observable.just("Palmeiras","São Paulo", "Corinthians", "Santos")
-
-        clubesObservable
-                .subscribeOn(Schedulers.io())
+        Observable.range(1,20)
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter{it.toUpperCase().startsWith("S")}
-                .subscribe(getClubesObserver())
-    }
+                .subscribeOn(Schedulers.io())
+                .filter{it % 2 == 0}
+                .map{"$it é par"}
+                .subscribe(object : Observer<String> {
+                    override fun onComplete() {
 
-    private fun getClubesObserver(): Observer<String> {
-        return object : Observer<String> {
-            override fun onSubscribe(d: Disposable) {
-                Log.d("TAG", "onSubscribe")
-            }
+                    }
 
-            override fun onNext(clube: String) {
-                //tvClubes.text = "${tvClubes.text}\n$clube"
-                Log.d("TAG", "Nome: $clube")
-            }
+                    override fun onSubscribe(d: Disposable) {
 
-            override fun onError(e: Throwable) {
-                Log.e("TAG", "Erro: " + e.message)
-            }
+                    }
 
-            override fun onComplete() {
-                Log.d("TAG", "Todos os itens emitidos")
+                    override fun onNext(t: String) {
+                        Log.d("TAG",t)
+                    }
 
+                    override fun onError(e: Throwable) {
 
-            }
-        }
+                    }
+                })
     }
 }
